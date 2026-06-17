@@ -1,0 +1,116 @@
+cubes:
+  - name: fact_sales
+    sql_table: dwh.fact_sales
+    data_source: default
+
+    joins:
+      # The updated Customer join using the SCD Surrogate Key
+      - name: dim_customers
+        sql: "{CUBE}.customer_id = {dim_customers}.dbt_scd_id"
+        relationship: belongsTo
+
+      # Join to Products
+      - name: dim_products
+        sql: "{CUBE}.product_sk = {dim_products}.product_sk"
+        relationship: belongsTo
+
+      # Join to Stores
+      - name: dim_stores
+        sql: "{CUBE}.store_sk = {dim_stores}.store_sk"
+        relationship: belongsTo
+
+      # Join to Locations
+      - name: dim_locations
+        sql: "{CUBE}.location_sk = {dim_locations}.location_sk"
+        relationship: belongsTo
+
+      # Join to the Calendar
+      - name: dwh_dim_calendar
+        sql: "{CUBE}.order_date_id = {dwh_dim_calendar}.date_id"
+        relationship: belongsTo
+
+    dimensions:
+      - name: customer_id
+        sql: customer_id
+        type: string
+
+      - name: location_sk
+        sql: location_sk
+        type: string
+
+      - name: order_id
+        sql: order_id
+        type: string
+      
+      - name: order_date_id
+        sql: order_date_id
+        type: string
+
+      - name: product_sk
+        sql: product_sk
+        type: string
+
+      - name: sales_sk
+        sql: sales_sk
+        type: string
+        primary_key: true
+
+      - name: store_sk
+        sql: store_sk
+        type: string
+        
+      - name: revenue
+        sql: revenue
+        type: number
+
+      - name: profit
+        sql: profit
+        type: number
+
+      - name: margin_pct
+        sql: margin_pct
+        type: number
+
+      - name: cost
+        sql: cost
+        type: number
+
+      - name: discount
+        sql: discount
+        type: number
+
+      - name: quantity
+        sql: quantity
+        type: number
+
+      - name: unit_price
+        sql: unit_price
+        type: number
+
+    measures:
+      - name: count_of_transactions
+        type: count
+      
+      - name: total_cost
+        type: sum
+        sql: cost
+
+      - name: total_quantity
+        type: sum
+        sql: quantity
+
+      # And keep your derived business measures here too!
+      - name: total_revenue
+        type: sum
+        sql: revenue 
+
+      - name: total_profit
+        type: sum
+        sql: profit
+
+    
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

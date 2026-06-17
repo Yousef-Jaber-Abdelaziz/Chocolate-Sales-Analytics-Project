@@ -1,0 +1,74 @@
+cubes:
+  - name: dwh_dim_calendar
+    sql_table: dwh.dwh_dim_calendar
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: date_id
+        sql: date_id
+        type: number
+
+      - name: day_name
+        sql: day_name
+        type: string
+
+      - name: is_holiday
+        sql: is_holiday
+        type: boolean
+
+      - name: is_weekend
+        sql: is_weekend
+        type: boolean
+
+      - name: monthname
+        sql: monthname
+        type: string
+
+      - name: season
+        sql: season
+        type: string
+
+      - name: full_date
+        sql: full_date
+        type: time
+        primary_key: true
+      
+      - name: year
+        sql: year
+        type: number
+
+      - name: quarter
+        sql: quarter
+        type: number
+
+      - name: month
+        sql: month
+        type: number
+
+      - name: week
+        sql: week
+        type: number
+
+      - name: day_of_week
+        sql: day_of_week
+        type: number
+
+    measures:
+      - name: count
+        type: count
+
+      - name: min_year
+        type: min
+        sql: year
+
+      - name: max_year
+        type: max
+        sql: year
+
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

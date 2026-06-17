@@ -1,0 +1,11 @@
+
+    
+    
+    truncate table "chocolate_warehouse"."main"."raw_locations";
+    -- dbt seed --
+    
+          COPY "chocolate_warehouse"."main"."raw_locations" FROM '/usr/local/airflow/include/dbt/chocolate_duckdb/seeds/raw_locations.csv' (FORMAT CSV, HEADER TRUE, DELIMITER ',')
+        
+
+;
+  

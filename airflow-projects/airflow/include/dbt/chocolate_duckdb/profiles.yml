@@ -1,0 +1,7 @@
+﻿chocolate_duckdb:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # This is the exact path inside the Airflow container where DuckDB lives
+      path: '/usr/local/airflow/include/STG/chocolate_warehouse.duckdb'

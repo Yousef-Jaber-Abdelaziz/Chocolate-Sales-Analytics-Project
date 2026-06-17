@@ -1,0 +1,24 @@
+
+  
+    
+    
+
+    create  table
+      "chocolate_warehouse"."main"."stg_dim_product__dbt_tmp"
+  
+    as (
+      ﻿
+
+SELECT DISTINCT
+    product_name,
+    product_brand,
+    product_category,
+    cocoa_percent,
+    product_weight_g AS product_weight,
+    product_batch_id,
+    product_source_system
+FROM "chocolate_warehouse"."main"."obt_chocolate_denormalized"
+WHERE product_name IS NOT NULL
+    );
+  
+  

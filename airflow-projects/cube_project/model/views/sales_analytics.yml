@@ -1,0 +1,100 @@
+views:
+  - name: sales_analytics
+    description: "Master flattened view"
+    
+    cubes:
+      - join_path: fact_sales
+        includes:
+          # --- Row-Level Dimensions (Aliased) ---
+          - name: cost
+            alias: item_cost
+          - name: discount
+            alias: order_discount
+          - name: quantity
+            alias: order_quantity
+          - name: unit_price
+            alias: item_unit_price
+          # --- Aggregated Measures (Unchanged) ---
+          - count_of_transactions
+          - total_cost
+          - total_quantity
+          - total_revenue
+          - total_profit
+
+      # 2. Customer Dimensions
+      - join_path: fact_sales.dim_customers
+        includes:
+          - name: bkey_customer
+            alias: customer_id
+          - name: age
+            alias: customer_age
+          - name: age_group
+            alias: customer_age_group
+          - name: customer_segment
+            alias: customer_segment
+          - name: gender
+            alias: customer_gender
+          - name: join_date
+            alias: customer_join_date
+          - name: loyalty_member
+            alias: is_loyalty_member
+
+      # 3. Product Dimensions
+      - join_path: fact_sales.dim_products
+        includes:
+          - name: product_name
+            alias: product_name
+          - name: product_brand
+            alias: product_brand
+          - name: product_category
+            alias: product_category
+          - name: cocoa_percent
+            alias: product_cocoa_percent
+          - name: product_weight
+            alias: product_weight
+
+      # 4. Location Dimensions
+      - join_path: fact_sales.dim_locations
+        includes:
+          - name: city
+            alias: store_city
+          - name: country
+            alias: store_country
+          - name: iso3
+            alias: store_country_iso3
+          - name: lat
+            alias: store_latitude
+          - name: lng
+            alias: store_longitude
+
+      # 5. Store Dimensions
+      - join_path: fact_sales.dim_stores
+        includes:
+          - name: store_name
+            alias: store_name
+          - name: store_type
+            alias: store_type
+          - name: is_online
+            alias: store_is_online
+
+      # 6. Calendar Dimensions (Order Related)
+      - join_path: fact_sales.dwh_dim_calendar
+        includes:
+          - name: full_date
+            alias: order_date
+          - name: year
+            alias: order_year
+          - name: month
+            alias: order_month
+          - name: monthname
+            alias: order_month_name
+          - name: season
+            alias: order_season
+          - name: quarter
+            alias: order_quarter
+          - name: is_weekend
+            alias: is_order_weekend
+          - name: week
+            alias: order_week
+          - min_year
+          - max_year

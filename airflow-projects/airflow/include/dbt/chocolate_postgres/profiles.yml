@@ -1,0 +1,13 @@
+chocolate_postgres:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: host.docker.internal
+      user: dwh_user
+      password: dwh_password
+      port: 5434
+      dbname: dwh
+      schema: dwh
+      threads: 4
+      keepalives_idle: 0

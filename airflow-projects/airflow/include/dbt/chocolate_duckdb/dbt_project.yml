@@ -1,0 +1,16 @@
+﻿name: 'chocolate_duckdb'
+version: '1.0.0'
+config-version: 2
+
+# This tells dbt which connection profile to use
+profile: 'chocolate_duckdb'
+
+# Where to look for SQL files
+model-paths: ["models"]
+clean-targets: ["target", "dbt_packages"]
+
+# Default settings for this project
+models:
+  chocolate_duckdb:
+    # By default, every SQL file we write will drop and recreate the table
+    +materialized: table

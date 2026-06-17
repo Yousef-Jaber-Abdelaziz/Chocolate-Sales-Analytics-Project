@@ -1,0 +1,49 @@
+cubes:
+  - name: dim_customers
+    sql_table: dwh.dim_customers
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: age_group
+        sql: age_group
+        type: string
+
+      - name: bkey_customer
+        sql: bkey_customer
+        type: string
+
+      - name: customer_segment
+        sql: customer_segment
+        type: string
+
+      - name: dbt_scd_id
+        sql: dbt_scd_id
+        type: string
+        primary_key: true
+
+      - name: gender
+        sql: gender
+        type: string
+
+      - name: join_date
+        sql: join_date
+        type: time
+      
+      - name: age
+        sql: age
+        type: number
+
+      - name: loyalty_member
+        sql: loyalty_member
+        type: number
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

@@ -1,0 +1,212 @@
+version: "3.8"
+
+networks:
+  de_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  duckdb_data:
+
+services:
+
+  # ─────────────────────────────────────────
+  # KAFKA BROKER 1 (KRaft mode)
+  # ─────────────────────────────────────────
+  kafka-1:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka-1
+    hostname: kafka-1
+    ports:
+      - "9092:9092"   # external access
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,EXTERNAL://0.0.0.0:9092
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:29092,EXTERNAL://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-1:29092,EXTERNAL://host.docker.internal:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:29093,2@kafka-2:29093,3@kafka-3:29093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      CLUSTER_ID: "Mk3OEYBSD38oCmFxCWRDCg"
+      KAFKA_LOG_RETENTION_BYTES: -1
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+    volumes:
+      - ./kafka_data/kafka-1:/var/lib/kafka/data
+    networks:
+      - de_network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  # ─────────────────────────────────────────
+  # KAFKA BROKER 2 (KRaft mode)
+  # ─────────────────────────────────────────
+  kafka-2:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka-2
+    hostname: kafka-2
+    ports:
+      - "9094:9094"   # external access
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,EXTERNAL://0.0.0.0:9094
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:29092,EXTERNAL://localhost:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-2:29092,EXTERNAL://host.docker.internal:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:29093,2@kafka-2:29093,3@kafka-3:29093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      CLUSTER_ID: "Mk3OEYBSD38oCmFxCWRDCg"
+    volumes:
+      - ./kafka_data/kafka-2:/var/lib/kafka/data
+    networks:
+      - de_network
+
+  # ─────────────────────────────────────────
+  # KAFKA BROKER 3 (KRaft mode)
+  # ─────────────────────────────────────────
+  kafka-3:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka-3
+    hostname: kafka-3
+    ports:
+      - "9095:9095"   # external access
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,EXTERNAL://0.0.0.0:9095
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:29092,EXTERNAL://localhost:9095
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-3:29092,EXTERNAL://host.docker.internal:9095
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:29093,2@kafka-2:29093,3@kafka-3:29093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      CLUSTER_ID: "Mk3OEYBSD38oCmFxCWRDCg"
+    volumes:
+      - ./kafka_data/kafka-3:/var/lib/kafka/data
+    networks:
+      - de_network
+
+
+  # ─────────────────────────────────────────
+  # POSTGRESQL (Data Warehouse)
+  # ─────────────────────────────────────────
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: dwh_user
+      POSTGRES_PASSWORD: dwh_password
+      POSTGRES_DB: dwh
+    volumes:
+      # ✅ THE FIX: Points directly to your local project folder
+      - ./include/postgres_db:/var/lib/postgresql/data
+    networks:
+      - de_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dwh_user -d dwh"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+  # ─────────────────────────────────────────
+  # PGADMIN
+  # ─────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    ports:
+      - "8081:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - de_network
+
+  # ─────────────────────────────────────────
+  # DUCKDB
+  # ─────────────────────────────────────────
+  duckdb:
+    image: python:3.11-slim
+    container_name: duckdb
+    volumes:
+      - ./duckdb_data:/duckdb_data
+      - ./producers:/producers
+      - ./consumers:/consumers
+      - D:/airflow-projects/airflow/include/STG:/duckdb_data
+    working_dir: /duckdb_data
+    command: >
+      bash -c "pip install duckdb dbt-duckdb kafka-python --quiet && tail -f /dev/null"
+    networks:
+      - de_network
+
+  # ─────────────────────────────────────────
+  # DBT
+  # ─────────────────────────────────────────
+  dbt:
+    image: python:3.11-slim
+    container_name: dbt
+    volumes:
+      - ./dbt:/dbt
+      - ./duckdb_data:/duckdb_data
+    working_dir: /dbt
+    command: >
+      bash -c "pip install dbt-duckdb --quiet && tail -f /dev/null"
+    networks:
+      - de_network
+    depends_on:
+      - postgres
+
+
+# ─────────────────────────────────────────
+  # CUBE.DEV (Headless Semantic Layer Server)
+  # ─────────────────────────────────────────
+  cube:
+    image: cubejs/cube:latest
+    container_name: cube
+    ports:
+      - "4000:4000"   # Cube UI & REST API (Open this in your browser)
+      - "15432:15432" # Cube SQL API (Superset connects to this port)
+    environment:
+      - CUBEJS_DB_TYPE=postgres
+      - CUBEJS_DB_HOST=postgres
+      - CUBEJS_DB_PORT=5432
+      - CUBEJS_DB_NAME=dwh
+      - CUBEJS_DB_USER=dwh_user
+      - CUBEJS_DB_PASS=dwh_password
+      - CUBEJS_DEV_MODE=true
+      - CUBEJS_PG_SQL_PORT=15432
+      - CUBESQL_STREAM_MODE=true
+      - CUBEJS_SQL_API_MAX_DATA_CHUNKS=200
+    volumes:
+      - ./cube_project:/cube/conf
+    networks:
+      - de_network
+    depends_on:
+      - postgres

@@ -1,0 +1,8 @@
+# Ignore database volumes
+airflow-projects/include/postgres_db/
+
+# Ignore large datasets
+*.csv
+
+# Ignore large BI files
+*.pbix

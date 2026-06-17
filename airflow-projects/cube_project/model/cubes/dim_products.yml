@@ -1,0 +1,43 @@
+cubes:
+  - name: dim_products
+    sql_table: dwh.dim_products
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: product_brand
+        sql: product_brand
+        type: string
+
+      - name: product_category
+        sql: product_category
+        type: string
+
+      - name: product_name
+        sql: product_name
+        type: string
+
+      - name: product_sk
+        sql: product_sk
+        type: string
+        primary_key: true
+      
+      - name: cocoa_percent
+        sql: cocoa_percent
+        type: number
+
+      - name: product_weight
+        sql: product_weight
+        type: number
+
+
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

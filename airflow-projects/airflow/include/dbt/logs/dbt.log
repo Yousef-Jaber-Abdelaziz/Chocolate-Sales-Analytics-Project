@@ -1,0 +1,180 @@
+[0m20:45:41.514892 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f639b925d30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f639d401090>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f639b0bafd0>]}
+
+
+============================== 20:45:41.525320 | 8bd5fa3a-b725-40fd-af6c-e12ee856e10f ==============================
+[0m20:45:41.525320 [info ] [MainThread]: Running with dbt=1.11.8
+[0m20:45:41.528988 [debug] [MainThread]: running dbt with arguments {'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'write_json': 'True', 'quiet': 'False', 'target_path': 'None', 'empty': 'None', 'log_path': 'logs', 'version_check': 'True', 'use_colors': 'True', 'indirect_selection': 'eager', 'use_experimental_parser': 'False', 'send_anonymous_usage_stats': 'True', 'introspect': 'True', 'printer_width': '80', 'static_parser': 'True', 'partial_parse': 'True', 'cache_selected_only': 'False', 'invocation_command': 'dbt init chocolate_postgres', 'warn_error': 'None', 'log_cache_events': 'False', 'no_print': 'None', 'log_format': 'default', 'debug': 'False', 'fail_fast': 'False', 'profiles_dir': '/home/astro/.dbt'}
+[0m20:45:41.696011 [info ] [MainThread]: Creating dbt configuration folder at /home/astro/.dbt
+[0m20:45:41.701593 [debug] [MainThread]: Starter project path: /usr/local/lib/python3.13/site-packages/dbt/include/starter_project
+[0m20:45:41.991827 [info ] [MainThread]: 
+Your new dbt project "chocolate_postgres" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m20:45:41.993305 [info ] [MainThread]: Setting up your profile.
+[0m20:46:39.582734 [info ] [MainThread]: Profile chocolate_postgres written to /home/astro/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m20:46:39.585746 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 58.17267, "process_in_blocks": "5864", "process_kernel_time": 0.449737, "process_mem_max_rss": "112028", "process_out_blocks": "8", "process_user_time": 3.216427}
+[0m20:46:39.587319 [debug] [MainThread]: Command `dbt init` succeeded at 20:46:39.586961 after 58.17 seconds
+[0m20:46:39.588610 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f6399ee4d60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f639af3cb90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7f639a85ee00>]}
+[0m20:46:39.589798 [debug] [MainThread]: Flushing usage events
+[0m20:46:42.522283 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m15:11:31.306328 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x766b34a11d30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x766b364f1090>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x766b341a2fd0>]}
+
+
+============================== 15:11:31.333865 | ee650b17-82f4-45dd-8278-01c04b199733 ==============================
+[0m15:11:31.333865 [info ] [MainThread]: Running with dbt=1.11.8
+[0m15:11:31.335922 [debug] [MainThread]: running dbt with arguments {'no_print': 'None', 'quiet': 'False', 'log_format': 'default', 'log_cache_events': 'False', 'empty': 'None', 'log_path': 'logs', 'send_anonymous_usage_stats': 'True', 'printer_width': '80', 'fail_fast': 'False', 'indirect_selection': 'eager', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'static_parser': 'True', 'introspect': 'True', 'target_path': 'None', 'invocation_command': 'dbt init chocolate_postgres', 'partial_parse': 'True', 'write_json': 'True', 'cache_selected_only': 'False', 'profiles_dir': '/home/astro/.dbt', 'version_check': 'True', 'debug': 'False', 'warn_error': 'None', 'use_experimental_parser': 'False', 'use_colors': 'True'}
+[0m15:11:31.392656 [info ] [MainThread]: Creating dbt configuration folder at /home/astro/.dbt
+[0m15:11:31.404189 [debug] [MainThread]: Starter project path: /usr/local/lib/python3.13/site-packages/dbt/include/starter_project
+[0m15:11:31.848350 [info ] [MainThread]: 
+Your new dbt project "chocolate_postgres" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m15:11:31.849808 [info ] [MainThread]: Setting up your profile.
+[0m15:15:15.322158 [info ] [MainThread]: Profile chocolate_postgres written to /home/astro/.dbt/profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m15:15:15.330294 [debug] [MainThread]: Resource report: {"command_name": "init", "command_success": true, "command_wall_clock_time": 224.17868, "process_in_blocks": "5096", "process_kernel_time": 0.983371, "process_mem_max_rss": "111808", "process_out_blocks": "8", "process_user_time": 4.301249}
+[0m15:15:15.335783 [debug] [MainThread]: Command `dbt init` succeeded at 15:15:15.334826 after 224.19 seconds
+[0m15:15:15.338369 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x766b32d2cd60>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x766b34028b90>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x766b3394ae00>]}
+[0m15:15:15.341898 [debug] [MainThread]: Flushing usage events
+[0m15:15:16.503294 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m15:15:29.462706 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7e7793675d30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7e7795151090>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7e7792e02fd0>]}
+
+
+============================== 15:15:29.469322 | 28911653-9f9f-4edb-b434-adb873ce9ba1 ==============================
+[0m15:15:29.469322 [info ] [MainThread]: Running with dbt=1.11.8
+[0m15:15:29.470658 [debug] [MainThread]: running dbt with arguments {'profiles_dir': '/home/astro/.dbt', 'invocation_command': 'dbt debug', 'log_format': 'default', 'use_colors': 'True', 'static_parser': 'True', 'introspect': 'True', 'empty': 'None', 'no_print': 'None', 'write_json': 'True', 'indirect_selection': 'eager', 'version_check': 'True', 'log_path': 'logs', 'debug': 'False', 'cache_selected_only': 'False', 'log_cache_events': 'False', 'send_anonymous_usage_stats': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'fail_fast': 'False', 'warn_error': 'None', 'target_path': 'None', 'quiet': 'False', 'use_experimental_parser': 'False', 'partial_parse': 'True'}
+[0m15:15:29.551004 [info ] [MainThread]: dbt version: 1.11.8
+[0m15:15:29.552993 [info ] [MainThread]: python version: 3.13.13
+[0m15:15:29.555554 [info ] [MainThread]: python path: /usr/local/bin/python
+[0m15:15:29.559384 [info ] [MainThread]: os info: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41
+[0m15:15:29.678180 [info ] [MainThread]: Using profiles dir at /home/astro/.dbt
+[0m15:15:29.679261 [info ] [MainThread]: Using profiles.yml file at /home/astro/.dbt/profiles.yml
+[0m15:15:29.680478 [info ] [MainThread]: Using dbt_project.yml file at /usr/local/airflow/include/dbt/dbt_project.yml
+[0m15:15:29.683041 [info ] [MainThread]: adapter type: postgres
+[0m15:15:29.684125 [info ] [MainThread]: adapter version: 1.10.0
+[0m15:15:29.686318 [info ] [MainThread]: Configuration:
+[0m15:15:29.687761 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m15:15:29.689111 [info ] [MainThread]:   dbt_project.yml file [[31mERROR not found[0m]
+[0m15:15:29.690969 [info ] [MainThread]: Required dependencies:
+[0m15:15:29.692726 [debug] [MainThread]: Executing "git --help"
+[0m15:15:29.699373 [info ] [MainThread]:  - git [[31mERROR[0m]
+
+[0m15:15:29.701210 [info ] [MainThread]: Connection:
+[0m15:15:29.703136 [info ] [MainThread]:   host: 172.18.0.5
+[0m15:15:29.704798 [info ] [MainThread]:   port: 5432
+[0m15:15:29.706970 [info ] [MainThread]:   user: dwh_user
+[0m15:15:29.708963 [info ] [MainThread]:   database: dwh
+[0m15:15:29.711466 [info ] [MainThread]:   schema: public
+[0m15:15:29.713723 [info ] [MainThread]:   connect_timeout: 10
+[0m15:15:29.716295 [info ] [MainThread]:   role: None
+[0m15:15:29.718558 [info ] [MainThread]:   search_path: None
+[0m15:15:29.721089 [info ] [MainThread]:   keepalives_idle: 0
+[0m15:15:29.723052 [info ] [MainThread]:   sslmode: None
+[0m15:15:29.724923 [info ] [MainThread]:   sslcert: None
+[0m15:15:29.727010 [info ] [MainThread]:   sslkey: None
+[0m15:15:29.729176 [info ] [MainThread]:   sslrootcert: None
+[0m15:15:29.732969 [info ] [MainThread]:   application_name: dbt
+[0m15:15:29.734906 [info ] [MainThread]:   retries: 1
+[0m15:15:29.737296 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m15:15:29.861203 [debug] [MainThread]: Acquiring new postgres connection 'debug'
+[0m15:15:29.958896 [debug] [MainThread]: Using postgres connection "debug"
+[0m15:15:29.960078 [debug] [MainThread]: On debug: select 1 as id
+[0m15:15:29.961061 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m15:15:29.991897 [debug] [MainThread]: SQL status: SELECT 1 in 0.031 seconds
+[0m15:15:29.993925 [debug] [MainThread]: On debug: Close
+[0m15:15:29.995221 [info ] [MainThread]:   Connection test: [[32mOK connection ok[0m]
+
+[0m15:15:29.996398 [info ] [MainThread]: [31m2 checks failed:[0m
+[0m15:15:29.997848 [info ] [MainThread]: Project loading failed for the following reason:
+ project path </usr/local/airflow/include/dbt/dbt_project.yml> not found
+
+[0m15:15:29.999290 [info ] [MainThread]: Error from git --help: Could not find command, ensure it is in the user's PATH: "git"
+
+[0m15:15:30.001290 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 0.67033744, "process_in_blocks": "80", "process_kernel_time": 0.562173, "process_mem_max_rss": "120472", "process_out_blocks": "8", "process_user_time": 5.88089}
+[0m15:15:30.002683 [debug] [MainThread]: Command `dbt debug` failed at 15:15:30.002475 after 0.67 seconds
+[0m15:15:30.003805 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m15:15:30.004995 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7e779193f820>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7e7791953d10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7e77925af9b0>]}
+[0m15:15:30.006277 [debug] [MainThread]: Flushing usage events
+[0m15:15:30.754208 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m15:17:30.237466 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76512a3a9d30>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76512be5d090>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x765129b42fd0>]}
+
+
+============================== 15:17:30.243743 | 968b8925-b6f7-4745-87e7-e82d37f7c843 ==============================
+[0m15:17:30.243743 [info ] [MainThread]: Running with dbt=1.11.8
+[0m15:17:30.245188 [debug] [MainThread]: running dbt with arguments {'quiet': 'False', 'version_check': 'True', 'send_anonymous_usage_stats': 'True', 'use_experimental_parser': 'False', 'empty': 'None', 'log_cache_events': 'False', 'warn_error': 'None', 'partial_parse': 'True', 'log_format': 'default', 'log_path': 'logs', 'invocation_command': 'dbt debug', 'no_print': 'None', 'introspect': 'True', 'use_colors': 'True', 'indirect_selection': 'eager', 'printer_width': '80', 'cache_selected_only': 'False', 'profiles_dir': '/home/astro/.dbt', 'fail_fast': 'False', 'debug': 'False', 'write_json': 'True', 'target_path': 'None', 'static_parser': 'True', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])'}
+[0m15:17:30.292529 [info ] [MainThread]: dbt version: 1.11.8
+[0m15:17:30.293776 [info ] [MainThread]: python version: 3.13.13
+[0m15:17:30.295088 [info ] [MainThread]: python path: /usr/local/bin/python
+[0m15:17:30.296551 [info ] [MainThread]: os info: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41
+[0m15:17:30.389381 [info ] [MainThread]: Using profiles dir at /home/astro/.dbt
+[0m15:17:30.390411 [info ] [MainThread]: Using profiles.yml file at /home/astro/.dbt/profiles.yml
+[0m15:17:30.391614 [info ] [MainThread]: Using dbt_project.yml file at /usr/local/airflow/include/dbt/dbt_project.yml
+[0m15:17:30.393299 [info ] [MainThread]: adapter type: postgres
+[0m15:17:30.394290 [info ] [MainThread]: adapter version: 1.10.0
+[0m15:17:30.395908 [info ] [MainThread]: Configuration:
+[0m15:17:30.397032 [info ] [MainThread]:   profiles.yml file [[32mOK found and valid[0m]
+[0m15:17:30.398342 [info ] [MainThread]:   dbt_project.yml file [[31mERROR not found[0m]
+[0m15:17:30.399769 [info ] [MainThread]: Required dependencies:
+[0m15:17:30.401464 [debug] [MainThread]: Executing "git --help"
+[0m15:17:30.404689 [info ] [MainThread]:  - git [[31mERROR[0m]
+
+[0m15:17:30.406083 [info ] [MainThread]: Connection:
+[0m15:17:30.408073 [info ] [MainThread]:   host: 172.18.0.5
+[0m15:17:30.409827 [info ] [MainThread]:   port: 5432
+[0m15:17:30.411484 [info ] [MainThread]:   user: dwh_user
+[0m15:17:30.413369 [info ] [MainThread]:   database: dwh
+[0m15:17:30.415378 [info ] [MainThread]:   schema: public
+[0m15:17:30.417434 [info ] [MainThread]:   connect_timeout: 10
+[0m15:17:30.419679 [info ] [MainThread]:   role: None
+[0m15:17:30.421452 [info ] [MainThread]:   search_path: None
+[0m15:17:30.423536 [info ] [MainThread]:   keepalives_idle: 0
+[0m15:17:30.425557 [info ] [MainThread]:   sslmode: None
+[0m15:17:30.429116 [info ] [MainThread]:   sslcert: None
+[0m15:17:30.431358 [info ] [MainThread]:   sslkey: None
+[0m15:17:30.433887 [info ] [MainThread]:   sslrootcert: None
+[0m15:17:30.436520 [info ] [MainThread]:   application_name: dbt
+[0m15:17:30.438804 [info ] [MainThread]:   retries: 1
+[0m15:17:30.441430 [info ] [MainThread]: Registered adapter: postgres=1.10.0
+[0m15:17:30.537342 [debug] [MainThread]: Acquiring new postgres connection 'debug'
+[0m15:17:30.573812 [debug] [MainThread]: Using postgres connection "debug"
+[0m15:17:30.574955 [debug] [MainThread]: On debug: select 1 as id
+[0m15:17:30.575797 [debug] [MainThread]: Opening a new connection, currently in state init
+[0m15:17:30.594467 [debug] [MainThread]: SQL status: SELECT 1 in 0.019 seconds
+[0m15:17:30.596330 [debug] [MainThread]: On debug: Close
+[0m15:17:30.597578 [info ] [MainThread]:   Connection test: [[32mOK connection ok[0m]
+
+[0m15:17:30.598932 [info ] [MainThread]: [31m2 checks failed:[0m
+[0m15:17:30.600456 [info ] [MainThread]: Project loading failed for the following reason:
+ project path </usr/local/airflow/include/dbt/dbt_project.yml> not found
+
+[0m15:17:30.602663 [info ] [MainThread]: Error from git --help: Could not find command, ensure it is in the user's PATH: "git"
+
+[0m15:17:30.605045 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": false, "command_wall_clock_time": 0.4541652, "process_in_blocks": "0", "process_kernel_time": 0.320255, "process_mem_max_rss": "121204", "process_out_blocks": "0", "process_user_time": 4.267403}
+[0m15:17:30.607002 [debug] [MainThread]: Command `dbt debug` failed at 15:17:30.606637 after 0.46 seconds
+[0m15:17:30.608375 [debug] [MainThread]: Connection 'debug' was properly closed.
+[0m15:17:30.610043 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x76512833f820>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x765128353d10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x7651292e79b0>]}
+[0m15:17:30.611910 [debug] [MainThread]: Flushing usage events
+[0m15:17:31.377761 [debug] [MainThread]: An error was encountered while trying to flush usage events

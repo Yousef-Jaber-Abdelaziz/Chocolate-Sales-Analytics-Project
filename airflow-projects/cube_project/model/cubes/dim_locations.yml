@@ -1,0 +1,47 @@
+cubes:
+  - name: dim_locations
+    sql_table: dwh.dim_locations
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: city
+        sql: city
+        type: string
+
+      - name: country
+        sql: country
+        type: string
+
+      - name: iso2
+        sql: iso2
+        type: string
+
+      - name: iso3
+        sql: iso3
+        type: string
+
+      - name: location_sk
+        sql: location_sk
+        type: string
+        primary_key: true
+
+      - name: lat
+        sql: lat
+        type: number
+
+      - name: lng
+        sql: lng
+        type: number
+
+
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

@@ -1,0 +1,34 @@
+cubes:
+  - name: dim_stores
+    sql_table: dwh.dim_stores
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: is_online
+        sql: is_online
+        type: boolean
+
+      - name: store_name
+        sql: store_name
+        type: string
+
+      - name: store_sk
+        sql: store_sk
+        type: string
+        primary_key: true
+
+      - name: store_type
+        sql: store_type
+        type: string
+
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+
