@@ -50,7 +50,6 @@ The pipeline is orchestrated using Apache Airflow and follows a multi-hop medall
 
 ---
 
-
 ## 🛠️ Tech Stack & Environment
 
 This project leverages a modern, fully containerized data stack to ensure reproducibility, scalability, and easy local development.
@@ -76,5 +75,12 @@ The infrastructure is divided into data processing services and pipeline orchest
 * **Core Infrastructure (`docker-compose.yaml`):** A single compose file spins up the 3-node Kafka cluster, PostgreSQL data warehouse, pgAdmin, the DuckDB staging environment, the dbt execution container, and the Cube.dev server. All services communicate securely over a custom Docker bridge network (`de_network`).
 * **Orchestration (Astro CLI):** Apache Airflow is deployed on Docker using the **Astronomer (Astro) CLI**. This runs alongside the core infrastructure, allowing Airflow to orchestrate the ingestion and warehousing DAGs while keeping orchestration dependencies cleanly separated from the data processing engines.
 * **Data Persistence:** Local volume mapping is utilized across the stack (e.g., `./include/postgres_db` for PostgreSQL and `./kafka_data` for the brokers) to ensure no data is lost when containers are spun down.
+
+<br/>
+<div align="center">
+  <a href="airflow-projects/docker-compose.yaml">
+    <img src="https://img.shields.io/badge/🐳_View_docker--compose.yaml-2496ED?style=for-the-badge&logoColor=white" alt="View Docker Compose File" />
+  </a>
+</div>
 
 ---
