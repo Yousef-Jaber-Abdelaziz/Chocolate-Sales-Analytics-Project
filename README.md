@@ -31,3 +31,21 @@ This is a **modern data engineering and analytics project** that demonstrates a 
 - Fully containerized deployment for reproducibility with Docker
 
 ---
+
+
+## 🗺️ Architecture Diagram
+
+The pipeline is orchestrated using Apache Airflow and follows a multi-hop medallion architecture to incrementally process, refine, and model the chocolate sales data.
+
+<div align="center">
+  <img src="airflow-projects/Flow%20Diagrams/Data%20Pipeline%20Diagram.png" alt="Data Pipeline Architecture Diagram" />
+</div>
+
+**Data Flow & Pipeline Layers:**
+*   **Data Ingestion (Bronze Layer):** Raw data is read from the CSV file by a Kafka Producer, streamed through Kafka topics in KRaft mode, and ingested into a **DuckDB** database by a Kafka Consumer.
+*   **Transformation (Silver Layer):** **dbt** executes models against the DuckDB database to clean and structure the raw data. 
+*   **Data Warehousing (Gold Layer):** The staged tables are transferred from DuckDB into a **PostgreSQL** Data Warehouse. A second set of **dbt** transformations is applied to build the final star schema (Fact and Dimension tables) and generate surrogate keys.
+*   **Semantic Layer & BI:** **Cube.dev** connects to the PostgreSQL data warehouse to define a unified semantic model, which is then queried by **Power BI** for the final interactive dashboards.
+*   **Orchestration & Infrastructure:** **Apache Airflow** manages the dependencies, scheduling the ingestion DAG and triggering the warehousing DAG only upon successful ingestion. It also acts as the notification center for task success or failure. The entire infrastructure is containerized using **Docker**.
+
+---
