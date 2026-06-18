@@ -138,3 +138,62 @@ airflow-projects/
 │
 └── 📂 My Datasets/                 # Raw source data files
     └── 📂 Chocolate Sales/         # Raw CSV extracts
+
+
+---
+
+## 🌊 Data Flow Walkthrough
+
+The pipeline processes Chocolate sales data spanning from **2023-01-01 to 2024-12-31**. The architecture is heavily focused on idempotency, fault tolerance, and strict sequential loading.
+
+If you want to visit the original Kaggle data source, please click here: 
+<a href="https://www.kaggle.com/code/ssssws/chocolate-sales"><img src="https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=Kaggle&logoColor=white" alt="Kaggle Dataset"/></a>
+
+Alternatively, the raw CSV files are stored locally in the repository at:
+`airflow-projects/My Datasets/Choclate Sales`
+
+### Phase 1: Data Ingestion (The Bronze Layer)
+*Managed by `chocolate_producer_dag` and Kafka Consumers*
+
+1. **Kafka Topic Initialization:** The Kafka cluster is initialized with four distinct topics:
+   * `chocolate_sales` (3 partitions, 3 replications)
+   * `chocolate_products` (1 partition, 3 replications)
+   * `chocolate_stores` (3 partitions, 3 replications)
+   * `chocolate_customers` (3 partitions, 3 replications)
+
+2. **Stateful Batch Producing:** Instead of a simple dump, the Python producer streams data incrementally, month-by-month. It utilizes a local memory state file to track progress. 
+   * The state tracks the current target month and retry attempts, looking like this:
+     ```json
+     {"target_month": "2023-01", "retry_count": 0, "max_retries": 3}
+     ```
+   * **Fault Tolerance:** If a month's data is successfully loaded, the memory increments to the next month. If data is missing or fails, it retries for up to 3 consecutive runs. If it still fails, it increments the month, gracefully leaving a gap rather than crashing the pipeline.
+   * <a href="airflow-projects/airflow/include/producers/producer_logic.py"><img src="https://img.shields.io/badge/View_Producer_Logic-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Producer Logic"/></a>
+
+3. **Smart Consumption & Alerting:** * If the ingestion DAG brings in no new data, an email notification is immediately dispatched to alert the team.
+   * If new data exists, the consumer reads from the topics based on Kafka offsets and lands the data into raw Bronze tables within the **DuckDB** database.
+   * A success report is emailed upon completion.
+
+4. **Data-Aware Scheduling:** The populated DuckDB database is registered in Apache Airflow as an **Asset** (Dataset). The successful update of this Asset acts as the trigger for the next phase.
+
+---
+
+### Phase 2: Transformation & Warehousing (Silver & Gold Layers)
+*Triggered automatically by the DuckDB Asset via `chocolate_warehousing_dag`*
+
+1. **Silver Layer (dbt + DuckDB):**
+   * **OBT Creation:** dbt initiates the transformation by joining the raw tables into a single One Big Table (OBT).
+   * **Staging:** Utilizing a single-slot pool to manage concurrency, dbt breaks this OBT down into normalized staging tables aligned with the target star schema.
+
+2. **Data Transfer:**
+   * The cleaned staging tables are extracted from DuckDB and loaded into the `public` schema of the target **PostgreSQL Data Warehouse**.
+
+3. **Gold Layer (dbt + PostgreSQL):**
+   * **Dimension Loading:** Data is moved from the `public` schema into the final `dwh` schema. Dimensions are strictly loaded *first*. Notably, Slowly Changing Dimensions (SCD) logic is applied to the `dim_customers` table to track historical changes.
+   * **Fact Loading:** Once dimensions are secure, the `fact_sales` table is loaded, performing necessary lookups against the dimension tables to retrieve surrogate keys.
+
+4. **Idempotency & Audit Trails:**
+   * **Success/Failure Alerting:** A final status email is dispatched to the admin account.
+   * **Idempotent Cleanup:** A teardown script runs to truncate the raw tables in DuckDB. This guarantees that if the pipeline is rerun, no duplicate data will be processed.
+   * **Auditing:** The final execution status of the DAG is recorded in a dedicated audit table for pipeline observability.
+
+---
