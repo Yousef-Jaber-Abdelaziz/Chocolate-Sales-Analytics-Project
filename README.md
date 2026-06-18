@@ -13,3 +13,21 @@
 <img src="https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iYmxhY2siPjxyZWN0IHg9IjIiIHk9IjE0IiB3aWR0aD0iNCIgaGVpZ2h0PSI4IiByeD0iMSIvPjxyZWN0IHg9IjgiIHk9IjkiIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiByeD0iMSIvPjxyZWN0IHg9IjE0IiB5PSI0IiB3aWR0aD0iNCIgaGVpZ2h0PSIxOCIgcng9IjEiLz48cmVjdCB4PSIyMCIgeT0iMTEiIHdpZHRoPSIyIiBoZWlnaHQ9IjExIiByeD0iMSIvPjwvc3ZnPg=="/>
 
 </div>
+
+---
+
+## 🎯 Project Overview
+
+This is a **modern data engineering and analytics project** that demonstrates a production-ready, event-driven data pipeline for processing and analyzing chocolate sales data. By transforming raw CSV files into actionable dashboards, this project solves the problem of siloed reporting. It combines multiple technologies to create a scalable, automated system that ingests, models, and visualizes sales metrics.
+
+**Key Features:**
+- Raw data ingestion from CSV files using Python
+- Event-driven streaming architecture with Apache Kafka
+- Pipeline orchestration and scheduling via Apache Airflow
+- Centralized data storage using PostgreSQL
+- Reliable data transformation and testing with dbt (data build tool)
+- Consistent metric definitions via a semantic layer with Cube.dev
+- Interactive visualizations and business intelligence using Power BI
+- Fully containerized deployment for reproducibility with Docker
+
+---
