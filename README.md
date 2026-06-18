@@ -49,3 +49,32 @@ The pipeline is orchestrated using Apache Airflow and follows a multi-hop medall
 *   **Orchestration & Infrastructure:** **Apache Airflow** manages the dependencies, scheduling the ingestion DAG and triggering the warehousing DAG only upon successful ingestion. It also acts as the notification center for task success or failure. The entire infrastructure is containerized using **Docker**.
 
 ---
+
+
+## 🛠️ Tech Stack & Environment
+
+This project leverages a modern, fully containerized data stack to ensure reproducibility, scalability, and easy local development.
+
+### 🧰 The Technology Stack
+
+| Technology | Role / Layer | Description |
+| :--- | :--- | :--- |
+| **Python** | Data Ingestion | Reads raw chocolate sales CSV files and acts as the producer sending batches to Kafka. |
+| **Apache Kafka** | Streaming (Bronze) | A 3-node cluster running in **KRaft mode** (Zookeeper-less) for reliable, high-throughput event streaming. |
+| **DuckDB** | Staging | Blazing fast, in-process analytical database used by consumers to land and stage raw Kafka events. |
+| **dbt** | Data Transformation | Executes SQL models to clean staging data (Silver) and build the final star schema (Gold). |
+| **PostgreSQL** | Data Warehouse (Gold) | Persistent relational database storing the final Fact and Dimension tables. |
+| **Cube.dev** | Semantic Layer | Headless BI server that centralizes metric definitions and serves them via a unified API. |
+| **Power BI** | Visualization | Connects to the semantic model to deliver interactive, real-time chocolate sales dashboards. |
+| **Apache Airflow** | Orchestration | Manages DAG scheduling, handles task dependencies, and manages alerting. |
+| **Docker** | Infrastructure | Containerizes all services, ensuring consistent environments and network isolation. |
+
+### ⚙️ Environment Setup & Architecture Notes
+
+The infrastructure is divided into data processing services and pipeline orchestration, all running seamlessly via Docker.
+
+* **Core Infrastructure (`docker-compose.yaml`):** A single compose file spins up the 3-node Kafka cluster, PostgreSQL data warehouse, pgAdmin, the DuckDB staging environment, the dbt execution container, and the Cube.dev server. All services communicate securely over a custom Docker bridge network (`de_network`).
+* **Orchestration (Astro CLI):** Apache Airflow is deployed on Docker using the **Astronomer (Astro) CLI**. This runs alongside the core infrastructure, allowing Airflow to orchestrate the ingestion and warehousing DAGs while keeping orchestration dependencies cleanly separated from the data processing engines.
+* **Data Persistence:** Local volume mapping is utilized across the stack (e.g., `./include/postgres_db` for PostgreSQL and `./kafka_data` for the brokers) to ensure no data is lost when containers are spun down.
+
+---
