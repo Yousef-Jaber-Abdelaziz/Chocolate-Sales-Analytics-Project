@@ -87,7 +87,6 @@ The infrastructure is divided into data processing services and pipeline orchest
 
 ## 📂 Project Folder Structure
 
-Here is a high-level overview of the repository, highlighting the core logic, transformations, and semantic models:
 
 ```text
 airflow-projects/
