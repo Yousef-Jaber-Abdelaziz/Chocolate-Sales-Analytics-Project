@@ -158,8 +158,8 @@ Alternatively, the raw CSV files are stored locally in the repository at:
 1. **Kafka Topic Initialization:** The Kafka cluster is initialized with four distinct topics:
    * `chocolate_sales` (3 partitions, 3 replications)
    * `chocolate_products` (1 partition, 3 replications)
-   * `chocolate_stores` (3 partitions, 3 replications)
-   * `chocolate_customers` (3 partitions, 3 replications)
+   * `chocolate_stores` (1 partitions, 3 replications)
+   * `chocolate_customers` (1 partitions, 3 replications)
 
 2. **Stateful Batch Producing:** Instead of a simple dump, the Python producer streams data incrementally, month-by-month. It utilizes a local memory state file to track progress. 
    * The state tracks the current target month and retry attempts, looking like this:
