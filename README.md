@@ -8,9 +8,7 @@
 ![Apache Airflow](https://img.shields.io/badge/apache_airflow-017CEE?style=for-the-badge&logo=apacheairflow&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Cube.dev](https://img.shields.io/badge/cube.dev-404040?style=for-the-badge&logo=cubedotjs&logoColor=white)
-![Power BI](https://img.shields.io/badge/power_bi-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
+![Cube.dev](https://img.shields.io/badge/Cube.dev-7B61FF?style=for-the-badge&logo=cube&logoColor=white)
+![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=microsoftpowerbi&logoColor=black)
 
 </div>
-
-<br/>
