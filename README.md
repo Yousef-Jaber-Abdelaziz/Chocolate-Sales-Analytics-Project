@@ -1,4 +1,4 @@
-# 🍫 ChocoFlow: End-to-End Chocolate Sales Data Pipeline
+# 🍫  Chocolate Sales Analytics Project - End-to-End Data Analytics project
 
 <div align="center">
 
