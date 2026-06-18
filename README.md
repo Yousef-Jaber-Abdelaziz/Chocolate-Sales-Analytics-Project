@@ -85,33 +85,57 @@ The infrastructure is divided into data processing services and pipeline orchest
 
 ---
 
-
 ## 📂 Project Folder Structure
 
-Here is a high-level overview of the repository, highlighting the core components of the data pipeline:
+Here is a high-level overview of the repository, highlighting the core logic, transformations, and semantic models:
 
 ```text
 airflow-projects/
 │
-├── 📄 docker-compose.yaml          # Core infrastructure & services orchestration
-├── 📄 README.md                    # Project documentation
+├── 📄 docker-compose.yaml          # Core infrastructure orchestration
+├── 📄 PROJECT_DOCUMENTATION.md     # Detailed pipeline documentation
 │
-├── 📂 airflow/                     # Apache Airflow orchestration setup
-│   ├── 📂 dags/                    # Pipeline schedules (Ingestion & Warehousing DAGs)
-│   ├── 📂 include/                 # Shared dependencies and utilities
-│   └── 📄 Dockerfile               # Airflow Docker image definition
+├── 📂 airflow/                     # Apache Airflow environment
+│   ├── 📂 dags/                    # Pipeline schedules (Ingestion & Warehousing)
+│   └── 📂 include/                 # Core pipeline logic
+│       ├── 📂 consumers/           # Kafka Consumer scripts (to DuckDB)
+│       ├── 📂 producers/           # Kafka Producer scripts (from CSV)
+│       │
+│       └── 📂 dbt/                 # Multi-database dbt projects
+│           ├── 📂 chocolate_duckdb/      # SILVER LAYER: Staging & Cleaning
+│           │   └── 📂 models/
+│           │       ├── 📂 ods/           
+│           │       │   └── obt_chocolate_denormalized.sql
+│           │       └── 📂 stg/           
+│           │           ├── stg_dim_customers.sql
+│           │           ├── stg_dim_locations.sql
+│           │           ├── stg_dim_products.sql
+│           │           ├── stg_dim_stores.sql
+│           │           └── stg_fact_sales.sql
+│           │
+│           └── 📂 chocolate_postgres/    # GOLD LAYER: Data Warehouse Schema
+│               └── 📂 models/            
+│                   ├── dim_locations.sql
+│                   ├── dim_products.sql
+│                   ├── dim_stores.sql
+│                   └── fact_sales.sql
 │
-├── 📂 producers/                   # Python scripts for producing Kafka events from CSV
-├── 📂 consumers/                   # Python scripts for consuming Kafka events to DuckDB
+├── 📂 cube_project/                # Headless Semantic Layer
+│   └── 📂 model/
+│       ├── 📂 cubes/               # Unified Metric Definitions
+│       │   ├── dim_customers.yml
+│       │   ├── dim_locations.yml
+│       │   ├── dim_products.yml
+│       │   ├── dim_stores.yml
+│       │   ├── dwh_dim_calendar.yml
+│       │   └── fact_sales.yml
+│       │
+│       └── 📂 views/               # Business-facing views
+│           ├── example_view.yml
+│           └── sales_analytics.yml
 │
-├── 📂 dbt/                         # Data Build Tool (dbt) project
-│   ├── 📂 models/                  # SQL transformations (staging & marts)
-│   ├── 📂 tests/                   # Data quality tests
-│   └── dbt_project.yml             # dbt configuration
+├── 📂 PowerBI Dashboard/           # Final visualization
+│   └── Chocolate Sales Dashboard.pbix
 │
-├── 📂 My Datasets/                 # Raw source data (CSV files for Chocolate Sales)
-│
-└── 🗄️ Persistent Data Volumes:     # Local storage mapped to Docker containers
-    ├── 📂 duckdb_data/             # DuckDB staging database files
-    ├── 📂 kafka_data/              # Kafka broker logs and KRaft metadata
-    └── 📂 include/postgres_db/     # PostgreSQL Data Warehouse storage
+└── 📂 My Datasets/                 # Raw source data files
+    └── 📂 Chocolate Sales/         # Raw CSV extracts
