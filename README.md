@@ -84,3 +84,34 @@ The infrastructure is divided into data processing services and pipeline orchest
 </div>
 
 ---
+
+
+## 📂 Project Folder Structure
+
+Here is a high-level overview of the repository, highlighting the core components of the data pipeline:
+
+```text
+airflow-projects/
+│
+├── 📄 docker-compose.yaml          # Core infrastructure & services orchestration
+├── 📄 README.md                    # Project documentation
+│
+├── 📂 airflow/                     # Apache Airflow orchestration setup
+│   ├── 📂 dags/                    # Pipeline schedules (Ingestion & Warehousing DAGs)
+│   ├── 📂 include/                 # Shared dependencies and utilities
+│   └── 📄 Dockerfile               # Airflow Docker image definition
+│
+├── 📂 producers/                   # Python scripts for producing Kafka events from CSV
+├── 📂 consumers/                   # Python scripts for consuming Kafka events to DuckDB
+│
+├── 📂 dbt/                         # Data Build Tool (dbt) project
+│   ├── 📂 models/                  # SQL transformations (staging & marts)
+│   ├── 📂 tests/                   # Data quality tests
+│   └── dbt_project.yml             # dbt configuration
+│
+├── 📂 My Datasets/                 # Raw source data (CSV files for Chocolate Sales)
+│
+└── 🗄️ Persistent Data Volumes:     # Local storage mapped to Docker containers
+    ├── 📂 duckdb_data/             # DuckDB staging database files
+    ├── 📂 kafka_data/              # Kafka broker logs and KRaft metadata
+    └── 📂 include/postgres_db/     # PostgreSQL Data Warehouse storage
