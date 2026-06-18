@@ -1,4 +1,4 @@
-# 🍫  Chocolate Sales Analytics Project - End-to-End Data Analytics project
+# 🍫  Chocolate Sales Analytics Project
 
 <div align="center">
 
