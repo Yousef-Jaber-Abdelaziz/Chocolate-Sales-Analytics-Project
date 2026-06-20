@@ -197,3 +197,36 @@ Alternatively, the raw CSV files are stored locally in the repository at:
    * **Auditing:** The final execution status of the DAG is recorded in a dedicated audit table for pipeline observability.
 
 ---
+
+
+## 🌟 Data Warehouse Design (Star Schema)
+
+The PostgreSQL Data Warehouse (Gold Layer) is designed using a **Star Schema** to optimize analytical queries (OLAP) and ensure intuitive dashboard building in Power BI and Cube.dev. 
+
+<div align="center">
+  <img src="Data%20models/Conceptual%20model.png" alt="Conceptual Data Model" width="48%" />
+  <img src="Data%20models/Logical%20model.png" alt="Logical Data Model" width="48%" />
+  <p><em>Left: High-level Conceptual Model. Right: Detailed Logical Model with data types and keys.</em></p>
+</div>
+
+### 🏗️ Schema Breakdown
+
+#### 1. The Fact Table (`Fact_Sales`)
+The center of the star schema stores the core transactional events and calculated metrics. 
+* **Measures:** Includes additive facts like `Quantity`, `Unit_Price`, `Discount`, `Revenue`, `Cost`, `Profit`, and `Margin_PCT`.
+* **Foreign Keys (FK):** Links to the surrounding dimensions using surrogate keys (e.g., `Product_ID`, `Store_ID`, `Customer_ID`, `Order_Date_ID`).
+
+#### 2. The Dimension Tables
+The descriptive context for the sales facts, fully denormalized for read performance:
+* **`Dim_Product`:** Details like category, brand, and cocoa percentage.
+* **`Dim_Store`:** Attributes for sales channels, tracking whether a store is physical or online.
+* **`Dim_Location`:** Geospatial attributes (City, Country, Lat, Lng) derived from external mapping data.
+* **`Dim_Customer`:** Demographic data (Age, Gender, Loyalty status). **Note:** This table implements **Slowly Changing Dimensions (SCD Type 2)** using dbt snapshots (`dbt_Valid_From`, `dbt_Valid_To`) to track historical changes in customer profiles.
+* **`DWH_DIM_Calender`:** A comprehensive date dimension providing attributes like Quarter, Weekend flags, and Seasons to enable complex time-series analysis.
+
+#### 🔑 Surrogate Keys & Lookup Logic
+* **Surrogate Keys (SK):** Primary keys (like `Sale_SK`, `Product_SK`) are generated during the dbt transformation phase. This decouples the data warehouse from source system changes and ensures referential integrity.
+* **Fact Lookups:** When loading the `Fact_Sales` table in the Gold layer, dbt executes lookup joins against the pre-loaded Dimension tables to fetch the correct Surrogate Keys based on the original business keys.
+* **Auditability:** Every table includes audit attributes (`Created_At`, `Batch_ID`, `Source_System`) to track data lineage back to the specific Kafka ingestion run.
+
+---
