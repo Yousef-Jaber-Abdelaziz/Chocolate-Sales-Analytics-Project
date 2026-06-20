@@ -230,3 +230,70 @@ The descriptive context for the sales facts, fully denormalized for read perform
 * **Auditability:** Every table includes audit attributes (`Created_At`, `Batch_ID`, `Source_System`) to track data lineage back to the specific Kafka ingestion run.
 
 ---
+
+
+## 🧠 9. Semantic Model Layer (Cube.dev)
+
+Between the data warehouse and the visualization tool sits **Cube.dev**, acting as a headless BI server and unified semantic layer. 
+
+Instead of writing complex DAX calculations or SQL views directly inside the BI tool, all business logic is centralized in Cube. This ensures that a "Sale" or "Profit" means the exact same thing regardless of the downstream tool querying it.
+
+* **Centralized Metrics (Measures):** The `fact_sales` cube defines the core aggregations. Basic calculations like **Total Orders**, **Total Revenue**, **Total Cost**, **Total Profit**, and **Average Margin %** are pre-defined here using standard SQL aggregations over the fact table.
+* **Dimensions:** Cubes for `dim_customers`, `dim_locations`, `dim_products`, and `dim_stores` expose the descriptive attributes and handle the join relationships to the fact table.
+* **BI Integration:** Power BI connects to Cube.dev's SQL API using **Import Mode**. This allows Power BI to ingest the clean, pre-calculated semantic model, resulting in lightning-fast dashboard performance without burdening the data warehouse with repetitive analytical queries.
+
+---
+
+## 📊 10. Dashboard & Visualization (Power BI)
+
+The final deliverable is an interactive, highly customized Power BI dashboard designed to answer critical business questions about chocolate sales behavior across 2023 and 2024. 
+
+The dashboard features a custom collapsible navigation pane, dynamic filtering, and a thematic UI that aligns perfectly with the artisanal chocolate data.
+
+### 🏠 Home Page
+A clean landing page that introduces the dashboard, its data source, and provides intuitive navigation to the analytical pages.
+
+<div align="center">
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Home%20Page.png" alt="Power BI Home Page" width="80%" />
+</div>
+<br/>
+
+### 📈 Overview Page
+Provides a high-level executive summary of sales performance. The UI features interactive pop-out panels for both navigation and dynamic filtering to keep the visual real estate clean and focused.
+* **Key KPIs:** Total Orders (990K+), Total Quantity, Total Revenue ($25M+), and the Cost vs. Profit split.
+
+<div align="center">
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Overview%20Navigation%20view.png" alt="Overview Page Navigation" width="48%" />
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Overview%20Filters%20view.png" alt="Overview Page Filters" width="48%" />
+  <p><em>Left: The expanded navigation pane triggered by the menu icon. Right: The expanded dynamic filters pane (Year, Month, Season, Store Type, Brand, Age Group, Gender) triggered by the settings icon.</em></p>
+</div>
+<br/>
+
+### 🍫 Products Analysis
+A deep dive into the 197 unique products across 6 brands.
+* **Key KPIs:** Average Cocoa % per piece, Average piece weight.
+* **Business Questions Answered:** Which specific products drive the most volume? How does cocoa percentage impact total quantity sold? What is the profit breakdown by brand and category (Praline, White, Dark, Truffle, Milk)?
+
+<div align="center">
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Products%20Analysis%20Page.png" alt="Products Analysis Page" width="80%" />
+</div>
+<br/>
+
+### 🌍 Sales Analysis
+Focuses on the geographical and operational aspects of the sales.
+* **Key KPIs:** Average Order Value ($25.49) and Average Margin (40%).
+* **Business Questions Answered:** Which countries generate the highest revenue? How do sales channels (Retail, Online, Mall, Airport) compare in profitability? Do Loyalty Members spend more than Guests?
+
+<div align="center">
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Sales%20Analysis%20pge.png" alt="Sales Analysis Page" width="80%" />
+</div>
+
+<br/>
+
+<div align="center">
+  <a href="airflow-projects/PowerBI%20Dashboard/Chocolate%20Sales%20Dashboard.pbix">
+    <img src="https://img.shields.io/badge/📊_Download_Power_BI_Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black" alt="Download Power BI Dashboard" />
+  </a>
+</div>
+
+---
