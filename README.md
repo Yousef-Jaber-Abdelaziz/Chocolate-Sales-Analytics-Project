@@ -1,4 +1,4 @@
-# 🍫  Chocolate Sales Analytics Project
+# 🍫 ChocoFlow: End-to-End Chocolate Sales Data Pipeline
 
 <div align="center">
 
@@ -14,39 +14,57 @@
 
 </div>
 
+<p align="center"><em>A production-style, event-driven data pipeline that turns raw chocolate sales CSVs into a fully governed star-schema warehouse and an interactive Power BI dashboard — all orchestrated, containerized, and reproducible.</em></p>
+
+---
+
+## 📋 Table of Contents
+
+1. [Project Overview](#-project-overview)
+2. [Architecture Diagram](#️-architecture-diagram)
+3. [Tech Stack & Environment](#️-tech-stack--environment)
+4. [Project Folder Structure](#-project-folder-structure)
+5. [Data Flow Walkthrough](#-data-flow-walkthrough)
+6. [Data Warehouse Design (Star Schema)](#-data-warehouse-design-star-schema)
+7. [Semantic Model Layer (Cube.dev)](#-semantic-model-layer-cubedev)
+8. [Dashboard & Visualization (Power BI)](#-dashboard--visualization-power-bi)
+9. [Acknowledgments](#-acknowledgments)
+
 ---
 
 ## 🎯 Project Overview
 
-This is a **modern data engineering and analytics project** that demonstrates a production-ready, event-driven data pipeline for processing and analyzing chocolate sales data. By transforming raw CSV files into actionable dashboards, this project solves the problem of siloed reporting. It combines multiple technologies to create a scalable, automated system that ingests, models, and visualizes sales metrics.
+**ChocoFlow** is a modern, end-to-end data engineering and analytics project that demonstrates a production-ready, event-driven pipeline for processing and analyzing chocolate sales data. It takes raw CSV files all the way to an interactive business dashboard — solving the common problem of siloed, manual reporting by building a fully automated, scalable system that ingests, models, and visualizes sales metrics.
 
 **Key Features:**
-- Raw data ingestion from CSV files using Python
-- Event-driven streaming architecture with Apache Kafka
-- Pipeline orchestration and scheduling via Apache Airflow
-- Centralized data storage using PostgreSQL
-- Reliable data transformation and testing with dbt (data build tool)
-- Consistent metric definitions via a semantic layer with Cube.dev
-- Interactive visualizations and business intelligence using Power BI
-- Fully containerized deployment for reproducibility with Docker
+- 📥 Raw data ingestion from CSV files using Python
+- 🔄 Event-driven streaming architecture with Apache Kafka (KRaft mode)
+- ⏱️ Pipeline orchestration and scheduling via Apache Airflow
+- 🗄️ Centralized data storage using PostgreSQL
+- 🧱 Reliable data transformation and testing with dbt (data build tool)
+- 📐 Consistent metric definitions via a semantic layer with Cube.dev
+- 📊 Interactive visualizations and business intelligence using Power BI
+- 🐳 Fully containerized deployment for reproducibility with Docker
 
 ---
 
-
 ## 🗺️ Architecture Diagram
 
-The pipeline is orchestrated using Apache Airflow and follows a multi-hop medallion architecture to incrementally process, refine, and model the chocolate sales data.
+The pipeline is orchestrated using Apache Airflow and follows a multi-hop **medallion architecture** to incrementally process, refine, and model the chocolate sales data.
 
 <div align="center">
-  <img src="airflow-projects/Flow%20Diagrams/Data%20Pipeline%20Diagram.png" alt="Data Pipeline Architecture Diagram" />
+  <img src="airflow-projects/Flow%20Diagrams/Data%20Pipeline%20Diagram.png" alt="Data Pipeline Architecture Diagram" width="90%"/>
 </div>
 
 **Data Flow & Pipeline Layers:**
-*   **Data Ingestion (Bronze Layer):** Raw data is read from the CSV file by a Kafka Producer, streamed through Kafka topics in KRaft mode, and ingested into a **DuckDB** database by a Kafka Consumer.
-*   **Transformation (Silver Layer):** **dbt** executes models against the DuckDB database to clean and structure the raw data. 
-*   **Data Warehousing (Gold Layer):** The staged tables are transferred from DuckDB into a **PostgreSQL** Data Warehouse. A second set of **dbt** transformations is applied to build the final star schema (Fact and Dimension tables) and generate surrogate keys.
-*   **Semantic Layer & BI:** **Cube.dev** connects to the PostgreSQL data warehouse to define a unified semantic model, which is then queried by **Power BI** for the final interactive dashboards.
-*   **Orchestration & Infrastructure:** **Apache Airflow** manages the dependencies, scheduling the ingestion DAG and triggering the warehousing DAG only upon successful ingestion. It also acts as the notification center for task success or failure. The entire infrastructure is containerized using **Docker**.
+
+| Layer | What happens |
+|---|---|
+| 🥉 **Ingestion (Bronze)** | Raw data is read from the CSV file by a Kafka Producer, streamed through Kafka topics in **KRaft mode**, and ingested into a **DuckDB** database by a Kafka Consumer. |
+| 🥈 **Transformation (Silver)** | **dbt** executes models against the DuckDB database to clean and structure the raw data. |
+| 🥇 **Warehousing (Gold)** | The staged tables are transferred from DuckDB into a **PostgreSQL** Data Warehouse. A second set of **dbt** transformations builds the final star schema (Fact and Dimension tables) and generates surrogate keys. |
+| 🧠 **Semantic Layer & BI** | **Cube.dev** connects to the PostgreSQL warehouse to define a unified semantic model, queried by **Power BI** for the final interactive dashboards. |
+| ⚙️ **Orchestration & Infra** | **Apache Airflow** manages dependencies, scheduling the ingestion DAG and triggering the warehousing DAG only upon successful ingestion. It also acts as the notification center for task success or failure. Everything runs inside **Docker**. |
 
 ---
 
@@ -60,7 +78,7 @@ This project leverages a modern, fully containerized data stack to ensure reprod
 | :--- | :--- | :--- |
 | **Python** | Data Ingestion | Reads raw chocolate sales CSV files and acts as the producer sending batches to Kafka. |
 | **Apache Kafka** | Streaming (Bronze) | A 3-node cluster running in **KRaft mode** (Zookeeper-less) for reliable, high-throughput event streaming. |
-| **DuckDB** | Staging | Blazing fast, in-process analytical database used by consumers to land and stage raw Kafka events. |
+| **DuckDB** | Staging | Blazing-fast, in-process analytical database used by consumers to land and stage raw Kafka events. |
 | **dbt** | Data Transformation | Executes SQL models to clean staging data (Silver) and build the final star schema (Gold). |
 | **PostgreSQL** | Data Warehouse (Gold) | Persistent relational database storing the final Fact and Dimension tables. |
 | **Cube.dev** | Semantic Layer | Headless BI server that centralizes metric definitions and serves them via a unified API. |
@@ -72,9 +90,9 @@ This project leverages a modern, fully containerized data stack to ensure reprod
 
 The infrastructure is divided into data processing services and pipeline orchestration, all running seamlessly via Docker.
 
-* **Core Infrastructure (`docker-compose.yaml`):** A single compose file spins up the 3-node Kafka cluster, PostgreSQL data warehouse, pgAdmin, the DuckDB staging environment, the dbt execution container, and the Cube.dev server. All services communicate securely over a custom Docker bridge network (`de_network`).
-* **Orchestration (Astro CLI):** Apache Airflow is deployed on Docker using the **Astronomer (Astro) CLI**. This runs alongside the core infrastructure, allowing Airflow to orchestrate the ingestion and warehousing DAGs while keeping orchestration dependencies cleanly separated from the data processing engines.
-* **Data Persistence:** Local volume mapping is utilized across the stack (e.g., `./include/postgres_db` for PostgreSQL and `./kafka_data` for the brokers) to ensure no data is lost when containers are spun down.
+- **Core Infrastructure (`docker-compose.yaml`):** A single compose file spins up the 3-node Kafka cluster, PostgreSQL data warehouse, pgAdmin, the DuckDB staging environment, the dbt execution container, and the Cube.dev server. All services communicate securely over a custom Docker bridge network (`de_network`).
+- **Orchestration (Astro CLI):** Apache Airflow is deployed on Docker using the **Astronomer (Astro) CLI**. This runs alongside the core infrastructure, allowing Airflow to orchestrate the ingestion and warehousing DAGs while keeping orchestration dependencies cleanly separated from the data processing engines.
+- **Data Persistence:** Local volume mapping is used across the stack (e.g., `./include/postgres_db` for PostgreSQL and `./kafka_data` for the brokers) to ensure no data is lost when containers are spun down.
 
 <br/>
 <div align="center">
@@ -86,7 +104,6 @@ The infrastructure is divided into data processing services and pipeline orchest
 ---
 
 ## 📂 Project Folder Structure
-
 
 ```text
 airflow-projects/
@@ -103,9 +120,9 @@ airflow-projects/
 │       └── 📂 dbt/                 # Multi-database dbt projects
 │           ├── 📂 chocolate_duckdb/      # SILVER LAYER: Staging & Cleaning
 │           │   └── 📂 models/
-│           │       ├── 📂 ods/           
+│           │       ├── 📂 ods/
 │           │       │   └── obt_chocolate_denormalized.sql
-│           │       └── 📂 stg/           
+│           │       └── 📂 stg/
 │           │           ├── stg_dim_customers.sql
 │           │           ├── stg_dim_locations.sql
 │           │           ├── stg_dim_products.sql
@@ -113,7 +130,7 @@ airflow-projects/
 │           │           └── stg_fact_sales.sql
 │           │
 │           └── 📂 chocolate_postgres/    # GOLD LAYER: Data Warehouse Schema
-│               └── 📂 models/            
+│               └── 📂 models/
 │                   ├── dim_locations.sql
 │                   ├── dim_products.sql
 │                   ├── dim_stores.sql
@@ -138,117 +155,113 @@ airflow-projects/
 │
 └── 📂 My Datasets/                 # Raw source data files
     └── 📂 Chocolate Sales/         # Raw CSV extracts
-
 ```
+
 ---
 
 ## 🌊 Data Flow Walkthrough
 
-The pipeline processes Chocolate sales data spanning from **2023-01-01 to 2024-12-31**. The architecture is heavily focused on idempotency, fault tolerance, and strict sequential loading.
+The pipeline processes chocolate sales data spanning from **2023-01-01 to 2024-12-31**. The architecture is heavily focused on idempotency, fault tolerance, and strict sequential loading.
 
-If you want to visit the original Kaggle data source, please click here: 
+Original Kaggle data source:
 <a href="https://www.kaggle.com/code/ssssws/chocolate-sales"><img src="https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=Kaggle&logoColor=white" alt="Kaggle Dataset"/></a>
 
 Alternatively, the raw CSV files are stored locally in the repository at:
-`airflow-projects/My Datasets/Choclate Sales`
+`airflow-projects/My Datasets/Chocolate Sales`
 
-### Phase 1: Data Ingestion (The Bronze Layer)
+### Phase 1 — Data Ingestion (The Bronze Layer)
 *Managed by `chocolate_producer_dag` and Kafka Consumers*
 
-1. **Kafka Topic Initialization:** The Kafka cluster is initialized with four distinct topics:
-   * `chocolate_sales` (3 partitions, 3 replications)
-   * `chocolate_products` (1 partition, 3 replications)
-   * `chocolate_stores` (1 partitions, 3 replications)
-   * `chocolate_customers` (1 partitions, 3 replications)
+1. **Kafka Topic Initialization** — the Kafka cluster is initialized with four distinct topics:
+   - `chocolate_sales` (3 partitions, 3 replications)
+   - `chocolate_products` (1 partition, 3 replications)
+   - `chocolate_stores` (1 partition, 3 replications)
+   - `chocolate_customers` (1 partition, 3 replications)
 
-2. **Stateful Batch Producing:** Instead of a simple dump, the Python producer streams data incrementally, month-by-month. It utilizes a local memory state file to track progress. 
-   * The state tracks the current target month and retry attempts, looking like this:
-     ```json
-     {"target_month": "2023-01", "retry_count": 0, "max_retries": 3}
-     ```
-   * **Fault Tolerance:** If a month's data is successfully loaded, the memory increments to the next month. If data is missing or fails, it retries for up to 3 consecutive runs. If it still fails, it increments the month, gracefully leaving a gap rather than crashing the pipeline.
-   * <a href="airflow-projects/airflow/include/producers/producer_logic.py"><img src="https://img.shields.io/badge/View_Producer_Logic-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Producer Logic"/></a>
+2. **Stateful Batch Producing** — instead of a simple dump, the Python producer streams data incrementally, month by month, using a local memory state file to track progress.
 
-3. **Smart Consumption & Alerting:** * If the ingestion DAG brings in no new data, an email notification is immediately dispatched to alert the team.
-   * If new data exists, the consumer reads from the topics based on Kafka offsets and lands the data into raw Bronze tables within the **DuckDB** database.
-   * A success report is emailed upon completion.
+   State example:
+   ```json
+   {"target_month": "2023-01", "retry_count": 0, "max_retries": 3}
+   ```
+   **Fault Tolerance:** if a month's data is successfully loaded, the state advances to the next month. If data is missing or fails, it retries up to 3 consecutive runs — then gracefully moves on, leaving a gap rather than crashing the pipeline.
 
-4. **Data-Aware Scheduling:** The populated DuckDB database is registered in Apache Airflow as an **Asset** (Dataset). The successful update of this Asset acts as the trigger for the next phase.
+   <a href="airflow-projects/airflow/include/producers/producer_logic.py"><img src="https://img.shields.io/badge/View_Producer_Logic-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Producer Logic"/></a>
 
----
+3. **Smart Consumption & Alerting** — if the ingestion DAG brings in no new data, an email notification is dispatched immediately. If new data exists, the consumer reads from the topics by Kafka offset and lands it into raw Bronze tables in **DuckDB**. A success report is emailed on completion.
 
-### Phase 2: Transformation & Warehousing (Silver & Gold Layers)
+4. **Data-Aware Scheduling** — the populated DuckDB database is registered in Apache Airflow as an **Asset** (Dataset). A successful update of this Asset triggers the next phase automatically.
+
+### Phase 2 — Transformation & Warehousing (Silver & Gold Layers)
 *Triggered automatically by the DuckDB Asset via `chocolate_warehousing_dag`*
 
-1. **Silver Layer (dbt + DuckDB):**
-   * **OBT Creation:** dbt initiates the transformation by joining the raw tables into a single One Big Table (OBT).
-   * **Staging:** Utilizing a single-slot pool to manage concurrency, dbt breaks this OBT down into normalized staging tables aligned with the target star schema.
+1. **Silver Layer (dbt + DuckDB)**
+   - **OBT Creation:** dbt joins the raw tables into a single One Big Table (OBT).
+   - **Staging:** using a single-slot pool to manage concurrency, dbt breaks the OBT down into normalized staging tables aligned with the target star schema.
 
-2. **Data Transfer:**
-   * The cleaned staging tables are extracted from DuckDB and loaded into the `public` schema of the target **PostgreSQL Data Warehouse**.
+2. **Data Transfer**
+   - The cleaned staging tables are extracted from DuckDB and loaded into the `public` schema of the target **PostgreSQL Data Warehouse**.
 
-3. **Gold Layer (dbt + PostgreSQL):**
-   * **Dimension Loading:** Data is moved from the `public` schema into the final `dwh` schema. Dimensions are strictly loaded *first*. Notably, Slowly Changing Dimensions (SCD) logic is applied to the `dim_customers` table to track historical changes.
-   * **Fact Loading:** Once dimensions are secure, the `fact_sales` table is loaded, performing necessary lookups against the dimension tables to retrieve surrogate keys.
+3. **Gold Layer (dbt + PostgreSQL)**
+   - **Dimension Loading:** data moves from the `public` schema into the final `dwh` schema. Dimensions load *first*. **Slowly Changing Dimension (SCD Type 2)** logic is applied to `dim_customers` to track historical changes.
+   - **Fact Loading:** once dimensions are secure, `fact_sales` loads, performing lookup joins against the dimension tables to retrieve surrogate keys.
 
-4. **Idempotency & Audit Trails:**
-   * **Success/Failure Alerting:** A final status email is dispatched to the admin account.
-   * **Idempotent Cleanup:** A teardown script runs to truncate the raw tables in DuckDB. This guarantees that if the pipeline is rerun, no duplicate data will be processed.
-   * **Auditing:** The final execution status of the DAG is recorded in a dedicated audit table for pipeline observability.
+4. **Idempotency & Audit Trails**
+   - **Success/Failure Alerting:** a final status email is dispatched to the admin account.
+   - **Idempotent Cleanup:** a teardown script truncates the raw tables in DuckDB, guaranteeing no duplicate data on rerun.
+   - **Auditing:** the final DAG execution status is recorded in a dedicated audit table for pipeline observability.
 
 ---
-
 
 ## 🌟 Data Warehouse Design (Star Schema)
 
-The PostgreSQL Data Warehouse (Gold Layer) is designed using a **Star Schema** to optimize analytical queries (OLAP) and ensure intuitive dashboard building in Power BI and Cube.dev. 
+The PostgreSQL Data Warehouse (Gold Layer) is designed using a **Star Schema** to optimize analytical queries (OLAP) and ensure intuitive dashboard building in Power BI and Cube.dev.
 
 <div align="center">
   <img src="Data%20models/Conceptual%20model.png" alt="Conceptual Data Model" width="48%" />
   <img src="Data%20models/Logical%20model.png" alt="Logical Data Model" width="48%" />
-  <p><em>Left: High-level Conceptual Model. Right: Detailed Logical Model with data types and keys.</em></p>
+  <p><em>Left: high-level Conceptual Model. Right: detailed Logical Model with data types and keys.</em></p>
 </div>
 
 ### 🏗️ Schema Breakdown
 
-#### 1. The Fact Table (`Fact_Sales`)
-The center of the star schema stores the core transactional events and calculated metrics. 
-* **Measures:** Includes additive facts like `Quantity`, `Unit_Price`, `Discount`, `Revenue`, `Cost`, `Profit`, and `Margin_PCT`.
-* **Foreign Keys (FK):** Links to the surrounding dimensions using surrogate keys (e.g., `Product_ID`, `Store_ID`, `Customer_ID`, `Order_Date_ID`).
+**1. The Fact Table — `Fact_Sales`**
+The center of the star schema, storing core transactional events and calculated metrics.
+- **Measures:** additive facts like `Quantity`, `Unit_Price`, `Discount`, `Revenue`, `Cost`, `Profit`, and `Margin_PCT`.
+- **Foreign Keys (FK):** links to surrounding dimensions via surrogate keys (e.g., `Product_ID`, `Store_ID`, `Customer_ID`, `Order_Date_ID`).
 
-#### 2. The Dimension Tables
-The descriptive context for the sales facts, fully denormalized for read performance:
-* **`Dim_Product`:** Details like category, brand, and cocoa percentage.
-* **`Dim_Store`:** Attributes for sales channels, tracking whether a store is physical or online.
-* **`Dim_Location`:** Geospatial attributes (City, Country, Lat, Lng) derived from external mapping data.
-* **`Dim_Customer`:** Demographic data (Age, Gender, Loyalty status). **Note:** This table implements **Slowly Changing Dimensions (SCD Type 2)** using dbt snapshots (`dbt_Valid_From`, `dbt_Valid_To`) to track historical changes in customer profiles.
-* **`DWH_DIM_Calender`:** A comprehensive date dimension providing attributes like Quarter, Weekend flags, and Seasons to enable complex time-series analysis.
+**2. The Dimension Tables**
+Descriptive context for the sales facts, fully denormalized for read performance:
+- **`Dim_Product`** — category, brand, and cocoa percentage.
+- **`Dim_Store`** — sales channel attributes, including physical vs. online stores.
+- **`Dim_Location`** — geospatial attributes (City, Country, Lat, Lng) derived from external mapping data.
+- **`Dim_Customer`** — demographic data (Age, Gender, Loyalty status). Implements **SCD Type 2** via dbt snapshots (`dbt_Valid_From`, `dbt_Valid_To`) to track historical changes in customer profiles.
+- **`DWH_DIM_Calendar`** — a comprehensive date dimension with Quarter, Weekend flags, and Seasons, enabling complex time-series analysis.
 
-#### 🔑 Surrogate Keys & Lookup Logic
-* **Surrogate Keys (SK):** Primary keys (like `Sale_SK`, `Product_SK`) are generated during the dbt transformation phase. This decouples the data warehouse from source system changes and ensures referential integrity.
-* **Fact Lookups:** When loading the `Fact_Sales` table in the Gold layer, dbt executes lookup joins against the pre-loaded Dimension tables to fetch the correct Surrogate Keys based on the original business keys.
-* **Auditability:** Every table includes audit attributes (`Created_At`, `Batch_ID`, `Source_System`) to track data lineage back to the specific Kafka ingestion run.
-
----
-
-
-## 🧠 9. Semantic Model Layer (Cube.dev)
-
-Between the data warehouse and the visualization tool sits **Cube.dev**, acting as a headless BI server and unified semantic layer. 
-
-Instead of writing complex DAX calculations or SQL views directly inside the BI tool, all business logic is centralized in Cube. This ensures that a "Sale" or "Profit" means the exact same thing regardless of the downstream tool querying it.
-
-* **Centralized Metrics (Measures):** The `fact_sales` cube defines the core aggregations. Basic calculations like **Total Orders**, **Total Revenue**, **Total Cost**, **Total Profit**, and **Average Margin %** are pre-defined here using standard SQL aggregations over the fact table.
-* **Dimensions:** Cubes for `dim_customers`, `dim_locations`, `dim_products`, and `dim_stores` expose the descriptive attributes and handle the join relationships to the fact table.
-* **BI Integration:** Power BI connects to Cube.dev's SQL API using **Import Mode**. This allows Power BI to ingest the clean, pre-calculated semantic model, resulting in lightning-fast dashboard performance without burdening the data warehouse with repetitive analytical queries.
+**🔑 Surrogate Keys & Lookup Logic**
+- **Surrogate Keys (SK):** primary keys (like `Sale_SK`, `Product_SK`) are generated during the dbt transformation phase, decoupling the warehouse from source-system changes and ensuring referential integrity.
+- **Fact Lookups:** when loading `Fact_Sales`, dbt performs lookup joins against the pre-loaded dimension tables to fetch the correct surrogate keys from the original business keys.
+- **Auditability:** every table includes audit attributes (`Created_At`, `Batch_ID`, `Source_System`) to trace data lineage back to the specific Kafka ingestion run.
 
 ---
 
-## 📊 10. Dashboard & Visualization (Power BI)
+## 🧠 Semantic Model Layer (Cube.dev)
 
-The final deliverable is an interactive, highly customized Power BI dashboard designed to answer critical business questions about chocolate sales behavior across 2023 and 2024. 
+Between the data warehouse and the visualization tool sits **Cube.dev**, acting as a headless BI server and unified semantic layer.
 
-The dashboard features a custom collapsible navigation pane, dynamic filtering, and a thematic UI that aligns perfectly with the artisanal chocolate data.
+Instead of writing complex DAX calculations or SQL views directly inside the BI tool, all business logic is centralized in Cube — ensuring that a "Sale" or "Profit" means exactly the same thing regardless of which downstream tool is querying it.
+
+- **Centralized Metrics (Measures):** the `fact_sales` cube defines the core aggregations — **Total Orders**, **Total Revenue**, **Total Cost**, **Total Profit**, and **Average Margin %** — pre-defined using standard SQL aggregations over the fact table.
+- **Dimensions:** cubes for `dim_customers`, `dim_locations`, `dim_products`, and `dim_stores` expose descriptive attributes and handle join relationships to the fact table.
+- **BI Integration:** Power BI connects to Cube.dev's SQL API using **Import Mode**, ingesting the clean, pre-calculated semantic model for lightning-fast dashboard performance without burdening the warehouse with repetitive analytical queries.
+
+---
+
+## 📊 Dashboard & Visualization (Power BI)
+
+The final deliverable is an interactive, highly customized Power BI dashboard designed to answer critical business questions about chocolate sales behavior across 2023 and 2024.
+
+The dashboard features a custom collapsible navigation pane, dynamic filtering, and a thematic UI that aligns with the artisanal chocolate data.
 
 ### 🏠 Home Page
 A clean landing page that introduces the dashboard, its data source, and provides intuitive navigation to the analytical pages.
@@ -259,20 +272,23 @@ A clean landing page that introduces the dashboard, its data source, and provide
 <br/>
 
 ### 📈 Overview Page
-Provides a high-level executive summary of sales performance. The UI features interactive pop-out panels for both navigation and dynamic filtering to keep the visual real estate clean and focused.
-* **Key KPIs:** Total Orders (990K+), Total Quantity, Total Revenue ($25M+), and the Cost vs. Profit split.
+A high-level executive summary of sales performance. The UI features interactive pop-out panels for both navigation and dynamic filtering to keep the visual real estate clean and focused.
+
+**Key KPIs:** Total Orders (990K+), Total Quantity, Total Revenue ($25M+), and the Cost vs. Profit split.
 
 <div align="center">
   <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Overview%20Navigation%20view.png" alt="Overview Page Navigation" width="48%" />
   <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Overview%20Filters%20view.png" alt="Overview Page Filters" width="48%" />
-  <p><em>Left: The expanded navigation pane triggered by the menu icon. Right: The expanded dynamic filters pane (Year, Month, Season, Store Type, Brand, Age Group, Gender) triggered by the settings icon.</em></p>
+  <p><em>Left: the expanded navigation pane (menu icon). Right: the expanded dynamic filters pane — Year, Month, Season, Store Type, Brand, Age Group, Gender (settings icon).</em></p>
 </div>
 <br/>
 
 ### 🍫 Products Analysis
 A deep dive into the 197 unique products across 6 brands.
-* **Key KPIs:** Average Cocoa % per piece, Average piece weight.
-* **Business Questions Answered:** Which specific products drive the most volume? How does cocoa percentage impact total quantity sold? What is the profit breakdown by brand and category (Praline, White, Dark, Truffle, Milk)?
+
+**Key KPIs:** Average Cocoa % per piece, Average piece weight.
+
+**Business questions answered:** Which specific products drive the most volume? How does cocoa percentage impact total quantity sold? What is the profit breakdown by brand and category (Praline, White, Dark, Truffle, Milk)?
 
 <div align="center">
   <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Products%20Analysis%20Page.png" alt="Products Analysis Page" width="80%" />
@@ -281,13 +297,14 @@ A deep dive into the 197 unique products across 6 brands.
 
 ### 🌍 Sales Analysis
 Focuses on the geographical and operational aspects of the sales.
-* **Key KPIs:** Average Order Value ($25.49) and Average Margin (40%).
-* **Business Questions Answered:** Which countries generate the highest revenue? How do sales channels (Retail, Online, Mall, Airport) compare in profitability? Do Loyalty Members spend more than Guests?
+
+**Key KPIs:** Average Order Value ($25.49) and Average Margin (40%).
+
+**Business questions answered:** Which countries generate the highest revenue? How do sales channels (Retail, Online, Mall, Airport) compare in profitability? Do loyalty members spend more than guests?
 
 <div align="center">
   <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Sales%20Analysis%20pge.png" alt="Sales Analysis Page" width="80%" />
 </div>
-
 <br/>
 
 <div align="center">
@@ -297,3 +314,15 @@ Focuses on the geographical and operational aspects of the sales.
 </div>
 
 ---
+
+## 🙏 Acknowledgments
+
+Thank you for taking the time to explore **ChocoFlow**! This project was built as a hands-on journey through modern data engineering — from streaming raw CSV records through Kafka, shaping them with dbt across two database engines, modeling a clean star schema, and finally surfacing it all through a semantic layer into a dashboard people can actually use.
+
+Special thanks to the open-source communities behind **Apache Kafka, Apache Airflow, dbt, DuckDB, PostgreSQL, Cube.dev,** and **Docker** — this project wouldn't have been possible without the incredible tools they've built and shared freely.
+
+If this repository helped you understand medallion architecture, dbt multi-database projects, or building a semantic layer with Cube.dev, consider leaving a ⭐ on the repo. Feedback, issues, and pull requests are always welcome!
+
+<div align="center">
+  <sub>Built with 🍫 and a lot of curiosity for data engineering.</sub>
+</div>
