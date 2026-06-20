@@ -172,7 +172,13 @@ Alternatively, the raw CSV files are stored locally in the repository at:
 ### Phase 1 — Data Ingestion (The Bronze Layer)
 *Managed by `chocolate_producer_dag` and Kafka Consumers*
 
-1. **Kafka Topic Initialization** — the Kafka cluster is initialized with four distinct topics:
+<div align="center">
+  <img src="airflow-projects/Dags%20images/Chocolate_Ingestion-graph.png" alt="Chocolate Ingestion DAG Graph" width="85%" />
+  <p><em>Airflow graph view of the Ingestion DAG — a <code>BranchPythonOperator</code> checks for new data before deciding whether to consume into DuckDB or send a warning email, with success logging and email notification at the end.</em></p>
+</div>
+<br/>
+
+1. **Kafka Topic Initialization** — the Kafka cluster is initialized with four distinct topics, populated by `produce_to_kafka`:
    - `chocolate_sales` (3 partitions, 3 replications)
    - `chocolate_products` (1 partition, 3 replications)
    - `chocolate_stores` (1 partition, 3 replications)
@@ -188,28 +194,34 @@ Alternatively, the raw CSV files are stored locally in the repository at:
 
    <a href="airflow-projects/airflow/include/producers/producer_logic.py"><img src="https://img.shields.io/badge/View_Producer_Logic-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Producer Logic"/></a>
 
-3. **Smart Consumption & Alerting** — if the ingestion DAG brings in no new data, an email notification is dispatched immediately. If new data exists, the consumer reads from the topics by Kafka offset and lands it into raw Bronze tables in **DuckDB**. A success report is emailed on completion.
+3. **Smart Consumption & Alerting** — `check_for_new_data` (a `BranchPythonOperator`) decides the path: if there's no new data, `send_warning_email` fires immediately. If new data exists, `consume_to_duckdb` reads from the topics by Kafka offset and lands it into raw Bronze tables in **DuckDB**, followed by `log_bronze_success` and `send_success_email`.
 
 4. **Data-Aware Scheduling** — the populated DuckDB database is registered in Apache Airflow as an **Asset** (Dataset). A successful update of this Asset triggers the next phase automatically.
 
 ### Phase 2 — Transformation & Warehousing (Silver & Gold Layers)
 *Triggered automatically by the DuckDB Asset via `chocolate_warehousing_dag`*
 
+<div align="center">
+  <img src="airflow-projects/Dags%20images/Chocolate_Staging_and_Transfer-graph.png" alt="Chocolate Staging and Transfer DAG Graph" width="95%" />
+  <p><em>Airflow graph view of the Warehousing DAG — although the staging tasks (<code>run_stg_fact_sales</code>, <code>run_stg_dim_customers</code>, <code>run_stg_dim_locations</code>, <code>run_stg_dim_products</code>, <code>run_stg_dim_stores</code>) appear visually parallel, they actually run <strong>sequentially</strong>, gated by a single-slot Airflow pool — DuckDB cannot handle concurrent read/write connections, so each staging model waits its turn before the next one starts.</em></p>
+</div>
+<br/>
+
 1. **Silver Layer (dbt + DuckDB)**
-   - **OBT Creation:** dbt joins the raw tables into a single One Big Table (OBT).
-   - **Staging:** using a single-slot pool to manage concurrency, dbt breaks the OBT down into normalized staging tables aligned with the target star schema.
+   - **OBT Creation:** dbt joins the raw tables into a single One Big Table (OBT) via `run_obt_model`.
+   - **Staging:** dbt then breaks the OBT down into normalized staging tables aligned with the target star schema. Each staging model (`run_stg_fact_sales`, `run_stg_dim_customers`, `run_stg_dim_locations`, `run_stg_dim_products`, `run_stg_dim_stores`) is constrained to a **single-slot Airflow pool**, forcing strictly sequential execution — DuckDB is single-writer and cannot safely serve two simultaneous read/write transactions, so true parallelism here would corrupt or block the database.
 
 2. **Data Transfer**
    - The cleaned staging tables are extracted from DuckDB and loaded into the `public` schema of the target **PostgreSQL Data Warehouse**.
 
 3. **Gold Layer (dbt + PostgreSQL)**
-   - **Dimension Loading:** data moves from the `public` schema into the final `dwh` schema. Dimensions load *first*. **Slowly Changing Dimension (SCD Type 2)** logic is applied to `dim_customers` to track historical changes.
-   - **Fact Loading:** once dimensions are secure, `fact_sales` loads, performing lookup joins against the dimension tables to retrieve surrogate keys.
+   - **Dimension Loading:** data moves from the `public` schema into the final `dwh` schema. Dimensions load *first* and in parallel — `run_dwh_stores`, `build_calendar_dim`, `run_dbt_customers_snapshot`, `run_dwh_locations`, and `run_dwh_products` all fan out from `transfer_stg_to_postgres`. **Slowly Changing Dimension (SCD Type 2)** logic is applied via `run_dbt_customers_snapshot` to track historical changes in `dim_customers`.
+   - **Fact Loading:** once all dimensions are loaded, `run_dwh_fact_sales` runs, performing lookup joins against the dimension tables to retrieve surrogate keys.
 
 4. **Idempotency & Audit Trails**
-   - **Success/Failure Alerting:** a final status email is dispatched to the admin account.
-   - **Idempotent Cleanup:** a teardown script truncates the raw tables in DuckDB, guaranteeing no duplicate data on rerun.
-   - **Auditing:** the final DAG execution status is recorded in a dedicated audit table for pipeline observability.
+   - **Success/Failure Alerting:** a final status email is dispatched via `send_success_email` to the admin account.
+   - **Idempotent Cleanup:** `truncate_duckdb_staging` runs to clear the raw tables in DuckDB, guaranteeing no duplicate data on rerun.
+   - **Auditing:** `log_gold_success` records the final DAG execution status in a dedicated audit table for pipeline observability.
 
 ---
 
