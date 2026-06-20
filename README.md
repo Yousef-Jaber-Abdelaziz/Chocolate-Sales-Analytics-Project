@@ -248,25 +248,25 @@ Instead of writing complex DAX calculations or SQL views directly inside the BI 
 
 The final deliverable is an interactive, highly customized Power BI dashboard designed to answer critical business questions about chocolate sales behavior across 2023 and 2024. 
 
-The dashboard features a custom navigation pane, dynamic filtering, and a thematic UI that aligns with the artisanal chocolate data.
+The dashboard features a custom collapsible navigation pane, dynamic filtering, and a thematic UI that aligns perfectly with the artisanal chocolate data.
 
 ### 🏠 Home Page
 A clean landing page that introduces the dashboard, its data source, and provides intuitive navigation to the analytical pages.
 
 <div align="center">
-  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Home%20Page.jpg" alt="Power BI Home Page" width="80%" />
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Home%20Page.png" alt="Power BI Home Page" width="80%" />
 </div>
 <br/>
 
 ### 📈 Overview Page
-Provides a high-level executive summary of sales performance. 
+Provides a high-level executive summary of sales performance. The UI features interactive pop-out panels for both navigation and dynamic filtering to keep the visual real estate clean and focused.
 * **Key KPIs:** Total Orders (990K+), Total Quantity, Total Revenue ($25M+), and the Cost vs. Profit split.
-* **Business Questions Answered:** What is the macro sales trend over the years? How is revenue distributed across product brands (Ferrero, Cadbury, etc.)? What is the gender and age distribution of our customer base?
 
 <div align="center">
-  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Overview%20Navigation%20view.png" alt="Overview Page Navigation" width="80%" />
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Overview%20Navigation%20view.png" alt="Overview Page Navigation" width="48%" />
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Overview%20Filters%20view.png" alt="Overview Page Filters" width="48%" />
+  <p><em>Left: The expanded navigation pane triggered by the menu icon. Right: The expanded dynamic filters pane (Year, Month, Season, Store Type, Brand, Age Group, Gender) triggered by the settings icon.</em></p>
 </div>
-*(The dashboard features a collapsible filter pane to slice the overview by Year, Month, Season, Store Type, Brand, and Demographics).*
 <br/>
 
 ### 🍫 Products Analysis
@@ -275,7 +275,7 @@ A deep dive into the 197 unique products across 6 brands.
 * **Business Questions Answered:** Which specific products drive the most volume? How does cocoa percentage impact total quantity sold? What is the profit breakdown by brand and category (Praline, White, Dark, Truffle, Milk)?
 
 <div align="center">
-  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Products%20Analysis%20Page.jpg" alt="Products Analysis Page" width="80%" />
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Products%20Analysis%20Page.png" alt="Products Analysis Page" width="80%" />
 </div>
 <br/>
 
@@ -285,7 +285,15 @@ Focuses on the geographical and operational aspects of the sales.
 * **Business Questions Answered:** Which countries generate the highest revenue? How do sales channels (Retail, Online, Mall, Airport) compare in profitability? Do Loyalty Members spend more than Guests?
 
 <div align="center">
-  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Sales%20Analysis%20pge.jpg" alt="Sales Analysis Page" width="80%" />
+  <img src="airflow-projects/PowerBI%20Dashboard/Dashboard%20Images/Sales%20Analysis%20pge.png" alt="Sales Analysis Page" width="80%" />
+</div>
+
+<br/>
+
+<div align="center">
+  <a href="airflow-projects/PowerBI%20Dashboard/Chocolate%20Sales%20Dashboard.pbix">
+    <img src="https://img.shields.io/badge/📊_Download_Power_BI_Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black" alt="Download Power BI Dashboard" />
+  </a>
 </div>
 
 ---
